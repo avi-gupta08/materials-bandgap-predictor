@@ -42,3 +42,5 @@ def extract_features(comp):
 
 # Test it on TiO2 once you write it:
 print("Testing TiO2:", extract_features({"Ti": 1, "O": 2}))
+
+print("hello")
