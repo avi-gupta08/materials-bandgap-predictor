@@ -1,6 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+x_list = []
+y_list = []
+
 # 1. Periodic Table Lookup Dictionary
 # Format: 'Element': [Pauling Electronegativity, Atomic Radius (Angstroms), Valence Electrons]
 PERIODIC_TABLE = {
@@ -31,25 +34,32 @@ MATERIALS_DATA = [
     ({"Ga": 2, "O": 3}, 4.80),   ({"Al": 2, "O": 3}, 8.80),   ({"Si": 1, "O": 2}, 8.90),
 ]
 
-# --- YOUR CODE FOR TASK 1 GOES BELOW ---
 def extract_features(comp):
-    # comp is a dictionary like {"Ti": 1, "O": 2}
-    # Write a loop to calculate:
     en_list = []
     enavg_list = []
+    avgr_list = []
     total_atoms = sum(comp.values())
 
     for k,c in comp.items():
         en_list.append(PERIODIC_TABLE[k][0])
         enavg_list.append(PERIODIC_TABLE[k][0]*c)
+        avgr_list.append(PERIODIC_TABLE[k][1]*c)
 
     en_diff = max(en_list) - min(en_list)
-
     en_avg = sum(enavg_list)/total_atoms
-    # 2. avg_en (weighted average electronegativity)
-    # 3. avg_radius (weighted average atomic radius)
+    r_avg = sum(avgr_list)/total_atoms
 
-    return [en_diff, en_avg]
+    return [en_diff, en_avg, r_avg]
+
+for comp, bandgap in MATERIALS_DATA:
+    x_list.append(extract_features(comp))
+    y_list.append(bandgap)
+
+X = np.array(x_list)
+Y = np.array(y_list)
+
+print(X)
+print(Y)
 
 # Test it on TiO2 once you write it:
 print("Testing TiO2:", extract_features({"Ti": 1, "O": 2}))
