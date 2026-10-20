@@ -35,12 +35,21 @@ MATERIALS_DATA = [
 def extract_features(comp):
     # comp is a dictionary like {"Ti": 1, "O": 2}
     # Write a loop to calculate:
-    # 1. en_diff (max electronegativity - min electronegativity)
+    en_list = []
+    enavg_list = []
+    total_atoms = sum(comp.values())
+
+    for k,c in comp.items():
+        en_list.append(PERIODIC_TABLE[k][0])
+        enavg_list.append(PERIODIC_TABLE[k][0]*c)
+
+    en_diff = max(en_list) - min(en_list)
+
+    en_avg = sum(enavg_list)/total_atoms
     # 2. avg_en (weighted average electronegativity)
     # 3. avg_radius (weighted average atomic radius)
-    pass
+
+    return [en_diff, en_avg]
 
 # Test it on TiO2 once you write it:
 print("Testing TiO2:", extract_features({"Ti": 1, "O": 2}))
-
-print("hello")
