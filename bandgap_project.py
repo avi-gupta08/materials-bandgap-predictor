@@ -72,7 +72,7 @@ y_pred = Biased_X @ weights
 mae = np.mean(np.abs(y - y_pred))
 
 #y_pred = w_1*x_1 + w_2*x_2 + w_3*x_3 + b
-#This gives you a 30-item array y_pred containing your computer's- 
+#this gives me a 30-item array y_pred containing my computer's- 
 #-predicted bandgap for every material!
 
 plt.figure(figsize=(7,6))
@@ -86,7 +86,6 @@ plt.title(f"Pure-NumPy Bandgap Predictor (MAE = {mae:.2f} eV)")
 
 plt.legend()
 plt.grid(True, alpha=0.3)  
-# alpha=0.3 makes the grid lines 30% opaque (faint, not distracting)
 plt.show()
 
 # Test TiO2:
