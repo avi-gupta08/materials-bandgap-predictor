@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 x_list = []
 y_list = []
 
-# 1. Periodic Table Lookup Dictionary
+# 1. Periodic Table Lookup Dictionary:
 # Format: 'Element': [Pauling Electronegativity, Atomic Radius (Angstroms), Valence Electrons]
 PERIODIC_TABLE = {
     "H":  [2.20, 0.53, 1], "Li": [0.98, 1.67, 1], "Be": [1.57, 1.12, 2],
@@ -20,7 +20,8 @@ PERIODIC_TABLE = {
     "Ba": [0.89, 2.53, 2],
 }
 
-# 2. Real Semiconductor Dataset: (Formula_Dict, Real_Bandgap_in_eV)
+# 2. Real Semiconductor Dataset:
+# (Formula_Dict, Real_Bandgap_in_eV)
 MATERIALS_DATA = [
     ({"Si": 1}, 1.12),           ({"Ge": 1}, 0.66),           ({"C": 1}, 5.47),
     ({"Ga": 1, "As": 1}, 1.42),  ({"Ga": 1, "N": 1}, 3.40),   ({"Ga": 1, "P": 1}, 2.26),
@@ -33,6 +34,8 @@ MATERIALS_DATA = [
     ({"Ba": 1, "Ti": 1, "O": 3}, 3.20), ({"Si": 1, "C": 1}, 3.26), ({"B": 1, "N": 1}, 5.96),
     ({"Ga": 2, "O": 3}, 4.80),   ({"Al": 2, "O": 3}, 8.80),   ({"Si": 1, "O": 2}, 8.90),
 ]
+
+# 3. The data extractor function:
 
 def extract_features(comp):
     en_list = []
@@ -56,10 +59,35 @@ for comp, bandgap in MATERIALS_DATA:
     y_list.append(bandgap)
 
 X = np.array(x_list)
-Y = np.array(y_list)
+y = np.array(y_list)
 
-print(X)
-print(Y)
+# 4. The linear regression model:
+ones_column = np.ones((X.shape[0],1))
+Biased_X = np.hstack((X, ones_column))
 
-# Test it on TiO2 once you write it:
+weights, _, _, _ = np.linalg.lstsq(Biased_X, y, rcond=None)
+w1, w2, w3, b = weights
+
+y_pred = Biased_X @ weights
+mae = np.mean(np.abs(y - y_pred))
+
+#y_pred = w_1*x_1 + w_2*x_2 + w_3*x_3 + b
+#This gives you a 30-item array y_pred containing your computer's- 
+#-predicted bandgap for every material!
+
+plt.figure(figsize=(7,6))
+
+plt.scatter(y, y_pred, color="royalblue", s=60, edgecolors="k", label="Semiconductors")
+plt.plot([0, 9], [0, 9], "r--", label="Perfect Prediction (y = x)")
+
+plt.xlabel("Real Bandgap (eV)")
+plt.ylabel("NumPy Predicted Bandgap (eV)")
+plt.title(f"Pure-NumPy Bandgap Predictor (MAE = {mae:.2f} eV)")
+
+plt.legend()
+plt.grid(True, alpha=0.3)  
+# alpha=0.3 makes the grid lines 30% opaque (faint, not distracting)
+plt.show()
+
+# Test TiO2:
 print("Testing TiO2:", extract_features({"Ti": 1, "O": 2}))
